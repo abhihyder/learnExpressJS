@@ -9,7 +9,6 @@ const User = new mongoose.model("User", userSchema);
 router.get("/", async (req, res) => {
   await User.find({})
     .select({ _id: 0 })
-    .limit(2)
     .exec((err, users) => {
       if (err) {
         res.status(500).send({ message: "Something went wrong!" });
@@ -20,8 +19,8 @@ router.get("/", async (req, res) => {
 });
 
 // find single user
-router.get("/:id", async (req, res) => {
-  await User.find({ _id: req.params.id })
+router.get("/:id", (req, res) => {
+  User.find({ _id: req.params.id })
     .select({ _id: 0 })
     .exec((err, users) => {
       if (err) {
@@ -34,9 +33,9 @@ router.get("/:id", async (req, res) => {
 
 //Insert single user at a time
 
-router.post("/", async (req, res) => {
+router.post("/", (req, res) => {
   const newUser = new User(req.body);
-  await newUser.save((err) => {
+  newUser.save((err) => {
     if (err) {
       res.status(500).send({ message: "Something went wrong!" });
     } else {
@@ -47,8 +46,8 @@ router.post("/", async (req, res) => {
 
 //Insert multiple users at a time
 
-router.post("/many", async (req, res) => {
-  await User.insertMany(req.body, (err) => {
+router.post("/many", (req, res) => {
+  User.insertMany(req.body, (err) => {
     if (err) {
       res.status(500).send({ message: "Something went wrong!" });
     } else {
@@ -83,15 +82,14 @@ router.put("/:id", async (req, res) => {
 });
 
 // find single user
-router.delete("/:id", async (req, res) => {
-  await User.deleteOne({ _id: req.params.id })
-    .exec((err) => {
-      if (err) {
-        res.status(500).send({ message: "Something went wrong!" });
-      } else {
-        res.send({ message: "User deleted  successfully!" });
-      }
-    });
+router.delete("/:id", (req, res) => {
+  User.deleteOne({ _id: req.params.id }).exec((err) => {
+    if (err) {
+      res.status(500).send({ message: "Something went wrong!" });
+    } else {
+      res.send({ message: "User deleted  successfully!" });
+    }
+  });
 });
 
 module.exports = router;
