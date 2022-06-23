@@ -1,21 +1,32 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const router = express.Router();
-const userSchema = require("../../Schemas/userSchema");
-
-const User = new mongoose.model("User", userSchema);
+const { User } = require("../../Schemas/Models");
+const UserController = require("../Controllers/UserController");
 
 // Find all users
-router.get("/", async (req, res) => {
-  await User.find({})
-    .select({ _id: 0 })
-    .exec((err, users) => {
-      if (err) {
-        res.status(500).send({ message: "Something went wrong!" });
-      } else {
-        res.send({ data: users });
-      }
-    });
+router.get("/", UserController.index);
+
+// Find users by filter
+router.get("/filter", async (req, res) => {
+  try {
+    // Call instance method
+    const users = new User();
+    const data = await users.filter(req.body).find({ status: 1 });
+    res.status(200).send({ data: data });
+  } catch (err) {
+    res.status(500).send({ message: err });
+  }
+});
+
+// Find users by active status
+router.get("/active", async (req, res) => {
+  try {
+    // Call static method
+    const data = await User.active();
+    res.status(200).send({ data: data });
+  } catch (err) {
+    res.status(500).send({ message: "Something went wrong" });
+  }
 });
 
 // find single user

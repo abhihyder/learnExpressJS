@@ -20,9 +20,30 @@ const userSchema = mongoose.Schema({
   },
   created_at: {
     type: Date,
-    default: Date.now()
-  }
+    default: Date.now(),
+  },
 });
 
+// Instance methods--------------------
+userSchema.methods = {
+  filter: function (reqData) {
+    const filter = {};
+    if (reqData.name) {
+      filter.name = new RegExp(reqData.name, 'i');
+    }
+    if (reqData.status) {
+      filter.name = reqData.status;
+    }
+
+    return mongoose.model("User").find(filter);
+  },
+};
+
+// static methods-------------- -----
+userSchema.statics = {
+  active: function () {
+    return this.find({ status: 1 });
+  },
+};
 
 module.exports = userSchema;

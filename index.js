@@ -1,9 +1,9 @@
 const express = require("express");
-const multer = require("multer");
+
 const app = express();
 const router = express.Router();
 const mongoose = require("mongoose");
-const userRequest = require("./src/Http/Routes/userRequest");
+const routes = require("./src/Http/Routes/routes");
 
 // Database connection with MongoDB by mongoose
 mongoose
@@ -15,27 +15,14 @@ mongoose
     console.log("Connection with mongoDB failed. Message:" + err)
   );
 
-var formData = multer();
-
 app.use(express.json());
 app.use(express.static(__dirname + "/public/"));
 app.use(router);
 app.set("view engine", "ejs");
 
-app.use("/user", userRequest);
 
-router.get("/", (req, res) => {
-  res.render("index");
-});
-
-router.post("/", formData.none(), (req, res) => {
-  console.log(req.body);
-  res.render("index");
-});
-
-router.get("/about", (req, res) => {
-  res.send("This is about page");
-});
+// Application routes
+app.use("/", routes);
 
 app.use((err, req, res, next) =>{
   if (res.headersSent) {
@@ -45,5 +32,5 @@ app.use((err, req, res, next) =>{
 });
 
 app.listen(3000, () => {
-  console.log("ExpressJS listening on port 3000");
+  console.log("Application listening on port 3000");
 });
