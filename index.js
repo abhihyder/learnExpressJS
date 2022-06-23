@@ -4,10 +4,11 @@ const app = express();
 const router = express.Router();
 const mongoose = require("mongoose");
 const routes = require("./src/Http/Routes/routes");
-
+const dotenv = require("dotenv");
+dotenv.config();
 // Database connection with MongoDB by mongoose
 mongoose
-  .connect("mongodb://localhost/express", {
+  .connect(process.env.DB_URL, {
     useNewUrlParser: true,
   })
   .then(() => console.log("Connection with mongoDB successfull!"))
@@ -20,15 +21,17 @@ app.use(express.static(__dirname + "/public/"));
 app.use(router);
 app.set("view engine", "ejs");
 
-
 // Application routes
 app.use("/", routes);
 
-app.use((err, req, res, next) =>{
+app.use((err, req, res, next) => {
   if (res.headersSent) {
     return next(err);
   }
-  res.status(500).send({ error: err });
+  if (res.statusCode == 200) {
+    res.status(500).json({ massage: err });
+  }
+  res.status(res.statusCode).json({ massage: err });
 });
 
 app.listen(3000, () => {
