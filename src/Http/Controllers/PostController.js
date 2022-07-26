@@ -4,7 +4,7 @@ const PostController = {};
 
 PostController.index = async (req, res) => {
   try {
-    const posts = await Post.find({}).populate("user_id", "name -_id").select({ _id: 0 });
+    const posts = await Post.find({user:{ $subquery : {status: 0}}}).populate("user", "name -_id").select({ _id: 0 });
     res.send({ data: posts });
   } catch (error) {
     res.status(500).send({ message: "Something went wrong!" });
@@ -16,7 +16,7 @@ PostController.store = async (req, res) => {
     const newPost = new Post({
       title: req.body.title,
       description: req.body.description,
-      user_id: req.auth_user.id,
+      user: req.auth_user.id,
     });
     await newPost.save();
     res.status(200).send({ message: "Post created successfully!" });

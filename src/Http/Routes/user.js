@@ -5,6 +5,11 @@ const UserController = require("../Controllers/UserController");
 const authMiddleware = require("../Middlewares/Auth");
 require("express-group-routes");
 
+//User register
+router.post("/register", UserController.register);
+
+// User login
+router.post("/login", UserController.login);
 // Route group
 router.group((router) => {
   router.use(authMiddleware);
@@ -45,9 +50,9 @@ router.group((router) => {
   router.post("/many", (req, res) => {
     User.insertMany(req.body, (err) => {
       if (err) {
-        res.status(500).send({ message: "Something went wrong!" });
+        res.status(500).json(err);
       } else {
-        res.status(200).send({ message: "Users inserted successfully!" });
+        res.status(200).json({ message: "Users inserted successfully!" });
       }
     });
   });
@@ -63,11 +68,5 @@ router.group((router) => {
     });
   });
 });
-
-//User register
-router.post("/register", UserController.register);
-
-// User login
-router.post("/login", UserController.login);
 
 module.exports = router;

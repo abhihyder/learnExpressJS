@@ -1,35 +1,38 @@
 const mongoose = require("mongoose");
+// const normalize = require("normalize-mongoose");
+require("mongoose-type-email");
 
-const userSchema = mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
+const userSchema = mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: mongoose.SchemaTypes.Email,
+      required: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    status: {
+      type: Number,
+      enum: [0, 1],
+      default: 1,
+    },
   },
-  email: {
-    type: String,
-    required: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  status: {
-    type: Number,
-    enum: [0, 1],
-    default: 1,
-  },
-  created_at: {
-    type: Date,
-    default: Date.now(),
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
 // Instance methods--------------------
 userSchema.methods = {
   filter: function (reqData) {
     const filter = {};
     if (reqData.name) {
-      filter.name = new RegExp(reqData.name, 'i');
+      filter.name = new RegExp(reqData.name, "i");
     }
     if (reqData.status) {
       filter.name = reqData.status;

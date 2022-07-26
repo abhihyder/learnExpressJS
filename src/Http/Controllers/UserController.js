@@ -8,6 +8,7 @@ UserController.index = (req, res) => {
   // Callback pattern query
   User.find({})
     .select({ _id: 0 })
+    .sort({ name: 'asc'})
     .exec((err, users) => {
       if (err) {
         res.status(500).json({ message: "Something went wrong!" });
@@ -19,7 +20,7 @@ UserController.index = (req, res) => {
 
 UserController.show = async (req, res) => {
   try {
-    let user = await User.findById({ _id: req.params.id }, "-password");
+    let user = await User.findOne({ _id: req.params.id }, "-password");
 
     res.status(200).json({ data: user });
   } catch (err) {
@@ -63,25 +64,25 @@ UserController.register = async (req, res) => {
       password: password,
     });
     await newUser.save();
-    res.status(200).send({ message: "User inserted successfully!" });
+    res.status(200).send({ message: "User registered successfully!" });
   } catch (err) {
-    res.status(500).send({ message: "Something went wrong!" });
+    res.status(422).json(err);
   }
 };
 
 UserController.login = async (req, res) => {
   try {
-    const user = await User.find({ email: req.body.email, status: 1 });
+    const user = await User.findOne({ email: req.body.email, status: 1 });
 
-    if (user && user.length > 0) {
+    if (user) {
       const validPassword = await bcrypt.compare(
         req.body.password,
-        user[0].password
+        user.password
       );
 
       if (validPassword) {
         const token = jwt.sign(
-          { email: user[0].email, id: user[0]._id },
+          { email: user.email, id: user._id },
           process.env.JWT_SECRET,
           { expiresIn: "1h" }
         );
