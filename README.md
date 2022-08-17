@@ -10,7 +10,7 @@
 
 - Run "npm install"
 
-- Run "cp .env.example .env.js"
+- Run "cp .env.example .env"
 
 ### Set related value in .env file
 
