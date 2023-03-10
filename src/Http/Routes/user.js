@@ -17,56 +17,23 @@ router.group((router) => {
   router.get("/", UserController.index);
 
   // Show user
-  router.get("/:id", UserController.show);
+  router.get("/show/:id", UserController.show);
 
   // Update user
   router.put("/:id", UserController.update);
 
   // Find users by filter
-  router.get("/filter", async (req, res) => {
-    try {
-      // Call instance method
-      const users = new User();
-      const data = await users.filter(req.body).find({ status: 1 });
-      res.status(200).send({ data: data });
-    } catch (err) {
-      res.status(500).send({ message: err });
-    }
-  });
+  router.get("/filter", UserController.filter);
 
   // Find users by active status
-  router.get("/active", async (req, res) => {
-    try {
-      // Call static method
-      const data = await User.active();
-      res.status(200).send({ data: data });
-    } catch (err) {
-      res.status(500).send({ message: "Something went wrong" });
-    }
-  });
+  router.get("/active", UserController.active);
 
   //Insert multiple users at a time
 
-  router.post("/many", (req, res) => {
-    User.insertMany(req.body, (err) => {
-      if (err) {
-        res.status(500).json(err);
-      } else {
-        res.status(200).json({ message: "Users inserted successfully!" });
-      }
-    });
-  });
+  router.post("/storeMany", UserController.storeMany);
 
   // delete single user
-  router.delete("/:id", (req, res) => {
-    User.deleteOne({ _id: req.params.id }).exec((err) => {
-      if (err) {
-        res.status(500).send({ message: "Something went wrong!" });
-      } else {
-        res.send({ message: "User deleted  successfully!" });
-      }
-    });
-  });
+  router.delete("/:id", UserController.delete);
 });
 
 module.exports = router;

@@ -20,3 +20,8 @@
 
 - After setting up all these things run "npm run serve" to start the server
 
+## Available Routes
+
+```url
+
+```
