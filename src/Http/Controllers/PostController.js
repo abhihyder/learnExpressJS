@@ -1,10 +1,12 @@
-const { Post } = require("../../Schemas/Models");
+const Post = require("../../Databases/Models/Post");
 
 const PostController = {};
 
 PostController.index = async (req, res) => {
   try {
-    const posts = await Post.find({user:{ $subquery : {status: 1}}}).populate("user", "name email -_id").select({ _id: 0 });
+    const posts = await Post.find({ user: { $subquery: { status: 1 } } })
+      .populate("user", "name email")
+      .select({ _id: 0 });
     res.send({ data: posts });
   } catch (error) {
     res.status(500).send({ message: "Something went wrong!" });

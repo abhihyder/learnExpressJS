@@ -2,10 +2,11 @@ const express = require("express");
 
 const app = express();
 const router = express.Router();
-const mongoose = require("mongoose");
+const mongoose = require("./src/Databases/mongoose");
 const routes = require("./src/Http/Routes/routes");
 const dotenv = require("dotenv");
 dotenv.config();
+
 // Database connection with MongoDB by mongoose
 mongoose
   .connect(process.env.DB_URL, {
@@ -34,6 +35,6 @@ app.use((err, req, res, next) => {
   res.status(res.statusCode).json({ massage: err });
 });
 
-app.listen(3000, () => {
-  console.log("Application listening on port 3000");
+app.listen(process.env.APP_PORT, () => {
+  console.log(`Application listening on port ${process.env.APP_PORT}`);
 });

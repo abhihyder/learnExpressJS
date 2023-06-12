@@ -1,5 +1,4 @@
-const mongoose = require("mongoose");
-// const normalize = require("normalize-mongoose");
+const mongoose = require("../mongoose");
 require("mongoose-type-email");
 
 const userSchema = mongoose.Schema(
@@ -10,6 +9,7 @@ const userSchema = mongoose.Schema(
     },
     email: {
       type: mongoose.SchemaTypes.Email,
+      unique: true,
       required: true,
     },
     password: {
@@ -19,6 +19,10 @@ const userSchema = mongoose.Schema(
     status: {
       type: Number,
       enum: [0, 1],
+      default: 1,
+    },
+    role: {
+      type: Number,
       default: 1,
     },
   },

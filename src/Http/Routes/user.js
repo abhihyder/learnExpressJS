@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const { User } = require("../../Schemas/Models");
 const UserController = require("../Controllers/UserController");
 const authMiddleware = require("../Middlewares/Auth");
 require("express-group-routes");

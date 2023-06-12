@@ -14,6 +14,7 @@
     "nodemon": "^2.0.16"
   },
   "scripts": {
-    "serve": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "serve": "node index.js"
   }
 }

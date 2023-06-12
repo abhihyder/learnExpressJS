@@ -1,4 +1,4 @@
-const { User } = require("../../Schemas/Models");
+const User = require("../../Databases/Models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -46,14 +46,13 @@ UserController.login = async (req, res) => {
       res.status(401).send({ message: "Authentication failed!" });
     }
   } catch (err) {
-    res.status(500).send({ message: "Something went wrong!" });
+    res.status(500).send({ message: err.message });
   }
 };
 
 UserController.index = (req, res) => {
   // Callback pattern query
   User.find({})
-    .select({ _id: 0 })
     .sort({ name: "asc" })
     .exec((err, users) => {
       if (err) {
